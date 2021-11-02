@@ -9,12 +9,11 @@ const Pin = new mongoose.Schema({
     title : {
         type : String,
         require : true,
-        unique: true
     },
-    title : {
+    description: {
         type : String,
         require : true,
-        unique: true
+        min : 3
     },
     rating : {
         type : Number , 
@@ -30,6 +29,6 @@ const Pin = new mongoose.Schema({
         type : Number,
         require : true
     }
-},{timestamp : true})
+})
 
-module.exports = new mongoose('Pins-model',Pin); 
+module.exports = mongoose.model("Pin",Pin)
