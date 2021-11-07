@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-mongoose.connect('mongodb://localhost/Database-Dreamer',
+mongoose.connect('mongodb://127.0.0.1:27017/Database-Dreamer',
 {useNewUrlParser : true}).then(()=>{
     console.log("database connected")
 }).catch((err)=>{

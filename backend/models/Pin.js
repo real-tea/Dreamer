@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PinSchema = new mongoose.Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
     },
@@ -12,7 +12,7 @@ const PinSchema = new mongoose.Schema(
       min: 3,
       max: 60,
     },
-    desc: {
+    description: {
       type: String,
       required: true,
       min: 3,
