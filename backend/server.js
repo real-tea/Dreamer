@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const pinRoute = require('./routes/pins')
+const UserRoute = require('./routes/User')
 
 const bodyParser = require("body-parser")
 
@@ -17,6 +18,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/Database-Dreamer',
 }).catch((err)=>{
     console.log(err.message);
 })
+
+app.use("/api/users",UserRoute)
 
 app.use("/api/pins",pinRoute);
 
