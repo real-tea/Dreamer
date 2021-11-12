@@ -23,4 +23,4 @@ app.use("/api/users",UserRoute)
 
 app.use("/api/pins",pinRoute);
 
-app.listen(3000,()=>{console.log("server started");})
+app.listen(4000,()=>{console.log("server started");})
