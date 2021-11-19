@@ -11,5 +11,15 @@ router.post("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+router.get("/",async (req,res) => {
+  try{
+    const pins = await Pin.find();
+    res.status(200).json(pins);
+  }catch(err){
+    console.log(err);
+    res.status(500).json({error : err.body});
+  }
+})
  
 module.exports = router;

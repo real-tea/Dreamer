@@ -1,21 +1,23 @@
-import { useState , useEffect} from 'react';
+import  { useState , useEffect} from 'react';
 import ReactMapGL , { Marker , Popup } from 'react-map-gl';
 import { Room , Star } from '@material-ui/icons';
+import { format } from 'timeago.js'
 import axios from 'axios';
+
 
 import './App.css';
 
-
-
 function App() {
 
-    const[pins,setPins] = useState([]);
+    
+    const [pins, setPins] = useState([]);
+    const [CurrentPlaceId, setCurrentPlaceId] = useState(null);
     const [viewport, setViewport] = useState({
     width: "100vw", 
     height: "100vh", 
     latitude: 51.1525, 
     longitude: 14.9689, 
-    zoom: 6})
+    zoom: 5})
 
 useEffect(() => {
   const getPins = async () =>{
@@ -29,6 +31,10 @@ useEffect(() => {
   getPins()
 }, [])
 
+  const handleMarkerClick = (id) => {
+    setCurrentPlaceId(id)
+  }
+
   return (
 
     <div className="App">
@@ -39,7 +45,7 @@ useEffect(() => {
       mapStyle = "mapbox://styles/akash-singh/ckvvv92vd4btd14m3srydan0t"
        > 
 
-       {pins.map(p=>(
+       {pins.map((p)=>(
 
          <>
       <Marker 
@@ -47,19 +53,22 @@ useEffect(() => {
       longitude={p.long} 
       offsetLeft={-20} 
       offsetTop={-10}>
-        <Room style = {{fontSize : viewport.zoom*7 , color : "red"}}/>
+        <Room style = {{fontSize : viewport.zoom*5 , color : "red"}}
+        onClick = {()=>handleMarkerClick(p._id)}/>
       </Marker>
-      {/*<Popup
-          latitude={51.1525}
-          longitude={14.9689}
-          closeButton={false}
+      
+      { p._id === CurrentPlaceId &&(
+        <Popup
+          latitude={p.lat}
+          longitude={p.long}
+          closeButton={true}
           closeOnClick={false}
-          anchor="bottom"> 
+          anchor="top"> 
           <div className = "card">
             <label>Place</label>
-            <h4 className = "place">Gorlitz</h4>
+            <h4 className = "place">{p.title}</h4>
             <label>Review</label>
-            <p>Nice Place</p>
+            <p>{p.description}</p>
             <label className = "stars">Rating</label>
             <div>
               <Star className="star"/>
@@ -68,10 +77,12 @@ useEffect(() => {
               <Star className="star"/>
             </div>
             <label>Information : </label>
-            <b className = "username">Akash, </b>
-            <span className = "date">1 hour ago</span>
+            <b className = "username">{p.username} </b>
+            <span className = "date">{ format(p.createdAt) }</span>
             </div> 
-      </Popup>*/ }  </>
+      </Popup>
+      )}
+      </>
        ))}
       </ReactMapGL> 
       
