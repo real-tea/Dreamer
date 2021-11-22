@@ -9,7 +9,7 @@ import './App.css';
 
 function App() {
 
-    
+    const currentUser = "Akash";
     const [pins, setPins] = useState([]);
     const [CurrentPlaceId, setCurrentPlaceId] = useState(null);
     const [viewport, setViewport] = useState({
@@ -28,7 +28,7 @@ useEffect(() => {
       console.log(err)
     }
   };
-  getPins()
+  getPins();
 }, [])
 
   const handleMarkerClick = (id) => {
@@ -53,7 +53,10 @@ useEffect(() => {
       longitude={p.long} 
       offsetLeft={-20} 
       offsetTop={-10}>
-        <Room style = {{fontSize : viewport.zoom*5 , color : "red"}}
+        <Room style = {{
+          fontSize : viewport.zoom*5 ,
+          color : p.username === currentUser ? "orange" : "blue",
+          cursor : "pointer"}}
         onClick = {()=>handleMarkerClick(p._id)}/>
       </Marker>
       
@@ -63,7 +66,9 @@ useEffect(() => {
           longitude={p.long}
           closeButton={true}
           closeOnClick={false}
-          anchor="top"> 
+          anchor="top"
+          onClose ={()=>{setCurrentPlaceId(null)}}
+          > 
           <div className = "card">
             <label>Place</label>
             <h4 className = "place">{p.title}</h4>
