@@ -12,6 +12,7 @@ function App() {
     const currentUser = "Akash";
     const [pins, setPins] = useState([]);
     const [CurrentPlaceId, setCurrentPlaceId] = useState(null);
+    const [NewPlace , setNewPlace ] = useState(null);
     const [viewport, setViewport] = useState({
     width: "100vw", 
     height: "100vh", 
@@ -31,18 +32,29 @@ useEffect(() => {
   getPins();
 }, [])
 
-  const handleMarkerClick = (id) => {
+  const handleMarkerClick = (id , lat , long) => {
     setCurrentPlaceId(id)
-  }
+    setViewport({...viewport,latitude : lat,longitude : long})
+  };
+
+  const handleAddClick = (e) =>{
+    const [long , lat ] = e.lngLat; 
+    // console.log(e)
+    setNewPlace({
+      lat,
+      long 
+    })
+  };
 
   return (
-
+    
     <div className="App">
        <ReactMapGL
       {...viewport}
       mapboxApiAccessToken = {process.env.REACT_APP_MAPBOX}
       onViewportChange={nextViewport => setViewport(nextViewport)}
       mapStyle = "mapbox://styles/akash-singh/ckvvv92vd4btd14m3srydan0t"
+      onDblClick = {handleAddClick}
        > 
 
        {pins.map((p)=>(
@@ -57,7 +69,7 @@ useEffect(() => {
           fontSize : viewport.zoom*5 ,
           color : p.username === currentUser ? "orange" : "blue",
           cursor : "pointer"}}
-        onClick = {()=>handleMarkerClick(p._id)}/>
+        onClick = {()=>handleMarkerClick(p._id , p.lat , p.long)}/>
       </Marker>
       
       { p._id === CurrentPlaceId &&(
@@ -89,6 +101,32 @@ useEffect(() => {
       )}
       </>
        ))}
+       {NewPlace && (
+        <Popup
+          latitude= {NewPlace.lat}
+          longitude={NewPlace.long}
+          closeButton={true}
+          closeOnClick={false}
+          anchor="top"
+          onClose ={()=>{setNewPlace(null)}}
+          ><div>
+            <form>
+              <label>Title : </label>
+              <input placeholder = "Enter title"/>
+              <label>Review : </label>
+              <textarea placeholder = "how you fealt?"/>
+              <label>Rating : </label>
+              <select>
+                <option value = "1">1</option>
+                <option value = "2">2</option>
+                <option value = "3">3</option>
+                <option value = "4">4</option>
+                <option value = "5">5</option>
+              </select>
+              <button className = "submitButton" type = "submit">Add pin</button>
+            </form>
+            </div></Popup> 
+        )}
       </ReactMapGL> 
       
     </div>
