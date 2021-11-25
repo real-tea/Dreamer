@@ -13,14 +13,38 @@ function App() {
     const [pins, setPins] = useState([]);
     const [CurrentPlaceId, setCurrentPlaceId] = useState(null);
     const [NewPlace , setNewPlace ] = useState(null);
+    const [title , setTitle] = useState(null);
+    const [desc , setDesc] = useState(null); 
+    const [rating , setRating ] = useState(0);
     const [viewport, setViewport] = useState({
     width: "100vw", 
     height: "100vh", 
     latitude: 51.1525, 
     longitude: 14.9689, 
     zoom: 5})
-
-useEffect(() => {
+    
+    const handleSubmit = async (e) =>{
+      e.preventDefault();
+      const newPin = {
+        user : currentUser,
+        title,
+        desc,
+        rating,
+        lat : NewPlace.lat, 
+        long : NewPlace.long
+      };
+    
+      try{
+        
+        const res = await axios.post('/pins',newPin)
+        setPins([...pins,res.data]);
+        setNewPlace(null);
+    
+      }catch(err){
+        console.log(err);
+      }
+    }
+    useEffect(() => {
   const getPins = async () =>{
     try{
       const res = await axios.get('/pins')
@@ -45,6 +69,7 @@ useEffect(() => {
       long 
     })
   };
+
 
   return (
     
@@ -102,6 +127,21 @@ useEffect(() => {
       </>
        ))}
        {NewPlace && (
+         <>
+         <Marker
+         latitude={NewPlace.lat}
+         longitude={NewPlace.long}
+         offsetLeft={-3.5 * viewport.zoom}
+         offsetTop={-7 * viewport.zoom}
+       >
+         <Room
+           style={{
+             fontSize: 7 * viewport.zoom,
+             color: "tomato",
+             cursor: "pointer",
+           }}
+         />
+       </Marker>
         <Popup
           latitude= {NewPlace.lat}
           longitude={NewPlace.long}
@@ -110,13 +150,15 @@ useEffect(() => {
           anchor="top"
           onClose ={()=>{setNewPlace(null)}}
           ><div>
-            <form>
+            <form onSubmit = { handleSubmit }>
               <label>Title : </label>
-              <input placeholder = "Enter title"/>
+              <input placeholder = "Enter title"
+               onChange = {(e)=>{setTitle(e.target.value)}}/>
               <label>Review : </label>
-              <textarea placeholder = "how you fealt?"/>
+              <textarea placeholder = "how you felt?"
+               onChange = {(e) => {setDesc(e.target.value)}}/>
               <label>Rating : </label>
-              <select>
+              <select onChange={(e) => {setRating(e.target.value)}}>
                 <option value = "1">1</option>
                 <option value = "2">2</option>
                 <option value = "3">3</option>
@@ -125,7 +167,9 @@ useEffect(() => {
               </select>
               <button className = "submitButton" type = "submit">Add pin</button>
             </form>
-            </div></Popup> 
+            </div>
+            </Popup> 
+            </>
         )}
       </ReactMapGL> 
       
