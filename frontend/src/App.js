@@ -23,27 +23,7 @@ function App() {
     longitude: 14.9689, 
     zoom: 5})
     
-    const handleSubmit = async (e) =>{
-      e.preventDefault();
-      const newPin = {
-        user : currentUser,
-        title,
-        desc,
-        rating,
-        lat : NewPlace.lat, 
-        long : NewPlace.long
-      };
     
-      try{
-        
-        const res = await axios.post('/pins',newPin)
-        setPins([...pins,res.data]);
-        setNewPlace(null);
-    
-      }catch(err){
-        console.log(err);
-      }
-    }
     useEffect(() => {
   const getPins = async () =>{
     try{
@@ -69,6 +49,28 @@ function App() {
       long 
     })
   };
+
+
+  const handleSubmit = async (e) =>{
+    // console.log(e);
+    e.preventDefault();
+    const newPin = {
+      user : currentUser,
+      title,
+      desc,
+      rating,
+      lat : NewPlace.lat, 
+      long : NewPlace.long
+    }
+  
+    try{
+      const res = await axios.post("/pins",newPin)
+      setPins([...pins,res.data]);
+      setNewPlace(null);  
+    }catch(err){
+      console.log(err);
+    }
+  }
 
 
   return (
@@ -126,9 +128,9 @@ function App() {
       )}
       </>
        ))}
-       {NewPlace && (
-         <>
-         <Marker
+       {NewPlace && ( 
+         <> 
+         {/* <Marker
          latitude={NewPlace.lat}
          longitude={NewPlace.long}
          offsetLeft={-3.5 * viewport.zoom}
@@ -141,7 +143,7 @@ function App() {
              cursor: "pointer",
            }}
          />
-       </Marker>
+       </Marker> */}
         <Popup
           latitude= {NewPlace.lat}
           longitude={NewPlace.long}
@@ -165,7 +167,7 @@ function App() {
                 <option value = "4">4</option>
                 <option value = "5">5</option>
               </select>
-              <button className = "submitButton" type = "submit">Add pin</button>
+              <button className = "submitButton" type = "submit" value = "Submit">Add pin</button>
             </form>
             </div>
             </Popup> 
